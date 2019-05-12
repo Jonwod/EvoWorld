@@ -13,3 +13,9 @@ Vec2 unitVector(float angleInRadians) {
 std::string str(const Vec2 &vec) {
     return std::string{"(" + std::to_string(vec.x) + ", " + std::to_string(vec.y) + ")"};
 }
+
+
+Vec2 normal(const Vec2 &vec) {
+    const float length = len(vec);
+    return length > 0.f ? vec / length : Vec2(0.f, 0.f);
+}

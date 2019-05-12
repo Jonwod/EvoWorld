@@ -13,6 +13,8 @@ typedef sf::Vector2f Vec2;
 
 Vec2 unitVector(float angleInRadians);
 
+Vec2 normal(const Vec2& vec);
+
 std::string str(const Vec2 & vec);
 
 inline float len(const Vec2 vec) {

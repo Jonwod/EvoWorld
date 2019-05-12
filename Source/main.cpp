@@ -14,9 +14,12 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+    window.setFramerateLimit(60);
 
     Snake snickers{Vec2(100.f, 100.f)};
+    snickers.setTargetAngle(pi/2);
 
+    constexpr float dt = 1.f / 60.f;
     while (window.isOpen())
     {
         sf::Event event;
@@ -26,9 +29,24 @@ int main()
                 window.close();
         }
 
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+            snickers.setTargetAngle(-pi/2.f);
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+            snickers.setTargetAngle(0.f);
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+            snickers.setTargetAngle(pi / 2.f);
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+            snickers.setTargetAngle(pi);
+        }
+
+
         window.clear();
 
         // ~~~~Draw~~~~~
+        snickers.update(dt);
         snickers.draw(window);
         // ~~~~~~~~~~~~~
 

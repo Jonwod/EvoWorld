@@ -36,7 +36,7 @@ void Snake::draw(sf::RenderWindow &renderWindow) const {
 
 bool Snake::addSegment() {
     if(_segments.size()){
-        _segments.push_back(_segments.back() - unitVector(_angle) * getSegmentRadius() * 1.5f);
+        _segments.push_back(_segments.back() - unitVector(_angle) * segmentSpacing());
         return true;
     }
 
@@ -55,4 +55,39 @@ void Snake::drawEyes(sf::RenderWindow &renderWindow) const {
     renderWindow.draw(circle);
     circle.setPosition(eyeCentre - unitVector(_angle + pi * 0.5f) * eyeDistance);
     renderWindow.draw(circle);
+}
+
+
+void Snake::update(float dt) {
+    updateAngle(dt);
+
+    if(_segments.size()) {
+        _segments[0] += unitVector(_angle) * _baseSpeed * dt;
+    }
+
+    for(int i = 1; i < _segments.size(); ++i){
+        const Vec2 offsetFromParent = _segments[i] - _segments[i - 1];
+        const Vec2 targetOffset = normal(offsetFromParent) * segmentSpacing();
+        _segments[i] = _segments[i - 1] + targetOffset;
+    }
+}
+
+
+float Snake::segmentSpacing() const {
+    return getSegmentRadius() * 1.5f;
+}
+
+
+void Snake::updateAngle(float dt) {
+    if(_angle != _targetAngle){
+        const float targetOffset = _targetAngle - _angle;
+        const float deltaAngle = _angularSpeed * dt * (targetOffset / fabs(targetOffset));
+
+        if(fabs(deltaAngle) > fabs(targetOffset)){
+            _angle = _targetAngle;
+        }
+        else{
+            _angle += deltaAngle;
+        }
+    }
 }
