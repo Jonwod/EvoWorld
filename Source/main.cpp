@@ -1,20 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "CircleBody.h"
-#include "CircleBodyPart.h"
+#include <vector>
+#include "Snake.h"
+#include "Math.h"
 
-bool testCircleBody(){
-    CircleBody circle1{10.f, {0.f, 0.f}};
-    CircleBody circle2{5.f, {-10.f, 13}};
-    return !circle1.overlaps(circle2);
-}
+//bool testCircleBody(){
+//    CircleBody circle1{10.f, {0.f, 0.f}};
+//    CircleBody circle2{5.f, {-10.f, 13}};
+//    return !circle1.overlaps(circle2);
+//}
 
 
 int main()
 {
-    CircleBodyPart bodyPart(50.f);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    Snake snickers{Vec2(100.f, 100.f)};
 
     while (window.isOpen())
     {
@@ -26,7 +27,11 @@ int main()
         }
 
         window.clear();
-        bodyPart.draw(window);
+
+        // ~~~~Draw~~~~~
+        snickers.draw(window);
+        // ~~~~~~~~~~~~~
+
         window.display();
     }
 
