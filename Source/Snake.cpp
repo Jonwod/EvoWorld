@@ -4,6 +4,7 @@
 
 #include "Snake.h"
 #include <vector>
+#include <iostream>
 
 
 Snake::Snake(const Vec2& initPosition)
@@ -19,13 +20,14 @@ Snake::Snake(const Vec2& initPosition)
 
 
 void Snake::draw(sf::RenderWindow &renderWindow) const {
-    if(_segments.size()) {
+    if(!_segments.empty()) {
         sf::CircleShape circle{getSegmentRadius()};
         circle.setOrigin(circle.getRadius(), circle.getRadius());
         circle.setFillColor(_color);
+        circle.setOutlineThickness(1.f);
 
-        for (const Vec2 &segment:_segments) {
-            circle.setPosition(segment);
+        for (int i = _segments.size() - 1; i >= 0; --i) {
+            circle.setPosition(_segments[i]);
             renderWindow.draw(circle);
         }
 
@@ -35,7 +37,7 @@ void Snake::draw(sf::RenderWindow &renderWindow) const {
 
 
 bool Snake::addSegment() {
-    if(_segments.size()){
+    if(!_segments.empty()){
         _segments.push_back(_segments.back() - unitVector(_angle) * segmentSpacing());
         return true;
     }
@@ -61,7 +63,7 @@ void Snake::drawEyes(sf::RenderWindow &renderWindow) const {
 void Snake::update(float dt) {
     updateAngle(dt);
 
-    if(_segments.size()) {
+    if(!_segments.empty()) {
         _segments[0] += unitVector(_angle) * _baseSpeed * dt;
     }
 
@@ -79,11 +81,11 @@ float Snake::segmentSpacing() const {
 
 
 void Snake::updateAngle(float dt) {
-    if(_angle != _targetAngle){
-        const float targetOffset = _targetAngle - _angle;
-        const float deltaAngle = _angularSpeed * dt * (targetOffset / fabs(targetOffset));
+    if(!nearlyEqual(_angle, _targetAngle, 0.0001f)){
+        const float targetOffset = normalizeAngle(_targetAngle - _angle);
+        const float deltaAngle = _angularSpeed * dt * (targetOffset / fabsf(targetOffset));
 
-        if(fabs(deltaAngle) > fabs(targetOffset)){
+        if(fabsf(deltaAngle) > fabsf(targetOffset)){
             _angle = _targetAngle;
         }
         else{

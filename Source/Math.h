@@ -9,6 +9,7 @@
 #include <string>
 #include <cmath>
 
+
 typedef sf::Vector2f Vec2;
 
 Vec2 unitVector(float angleInRadians);
@@ -17,12 +18,26 @@ Vec2 normal(const Vec2& vec);
 
 std::string str(const Vec2 & vec);
 
+
 inline float len(const Vec2 vec) {
-    return sqrt(vec.x * vec.x + vec.y * vec.y);
+    return sqrtf(vec.x * vec.x + vec.y * vec.y);
 }
+
 
 constexpr float pi = 3.14159265358979323846f;
 
+
+inline float normalizeAngle(float angleRadians){
+    float x = fmodf(angleRadians + pi, 2 * pi);
+    if(x < 0)
+        x += 2 * pi;
+    return x - pi;
+}
+
+
+inline bool nearlyEqual(float a, float b, float tolerance){
+    return fabsf(a - b) < tolerance;
+}
 
 
 #endif //EVOWORLD_MATH_H

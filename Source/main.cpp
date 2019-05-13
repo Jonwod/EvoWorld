@@ -4,6 +4,8 @@
 #include "Snake.h"
 #include "Math.h"
 
+#include <cfenv>
+
 //bool testCircleBody(){
 //    CircleBody circle1{10.f, {0.f, 0.f}};
 //    CircleBody circle2{5.f, {-10.f, 13}};
@@ -13,6 +15,9 @@
 
 int main()
 {
+    feenableexcept(FE_INVALID | FE_OVERFLOW);
+
+
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
     window.setFramerateLimit(60);
 
