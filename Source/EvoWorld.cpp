@@ -4,6 +4,7 @@
 
 #include "EvoWorld.h"
 #include "Circle.h"
+#include <iostream>
 
 
 EvoWorld::EvoWorld() {
@@ -31,12 +32,19 @@ void EvoWorld::update(float deltaSeconds) {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     for(Snake & snake: _snakes){
-        snake.update(deltaSeconds);
-        for(Plant & plant: _plants){
-            if(plant.isAlive()  &&  snake.doesHeadOverlap(plant.getCircle())){
-                snake.eat(plant);
+        if(snake.isAlive()) {
+            snake.update(deltaSeconds);
+
+            for (Plant &plant: _plants) {
+                if (plant.isAlive() && snake.doesHeadOverlap(plant.getCircle())) {
+                    snake.eat(plant);
+                }
+
             }
 
+            if(snake.wantsToReproduce()  &&  snake.canReproduce()){
+                reproduce(snake);
+            }
         }
     }
 }
@@ -51,4 +59,22 @@ void EvoWorld::draw(sf::RenderWindow &renderWindow) const {
         if(plant.isAlive())
             plant.draw(renderWindow);
     }
+}
+
+
+void EvoWorld::reproduce(Snake & parentSnake) {
+    constexpr int childSnakeSize = 3;
+
+    if(parentSnake.numSegments() <= childSnakeSize){
+        std::cout<<"Error in "<<__func__<<" parent snake of size "<<parentSnake.numSegments()<<
+        " cannot spawn child""of size "<<childSnakeSize<<std::endl;
+    }
+
+    std::vector<Vec2> newSnakeSegs;
+    for(int i = parentSnake.numSegments() - 1; i > parentSnake.numSegments() - childSnakeSize -1; --i){
+        newSnakeSegs.push_back(parentSnake.getSegment(i));
+    }
+
+    _snakes.emplace_back(Snake(newSnakeSegs, parentSnake.getSegmentRadius()));
+    parentSnake.removeSegments(3);
 }

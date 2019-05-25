@@ -15,6 +15,9 @@ class Snake {
 public:
     Snake(const Vec2& initPosition);
 
+    // First element is head
+    Snake(std::vector<Vec2> initSegments, float radius);
+
     void update(float dt);
 
     void draw(sf::RenderWindow & renderWindow) const;
@@ -34,6 +37,13 @@ public:
     bool wantsToReproduce() const { return _wantsToReproduce;};
 
     bool canReproduce() const { return _segments.size() > 3; };
+
+    void removeSegments(int16_t numberOfSegments);
+
+    std::size_t numSegments() const { return _segments.size(); };
+
+    // Where 0 is the head and numSegments() - 1 is the last segment
+    const Vec2& getSegment(std::size_t segmentIndex) const { return _segments[segmentIndex]; };
 private:
     void _drawEyes(sf::RenderWindow &renderWindow) const;
     float _segmentSpacing() const;
@@ -50,7 +60,7 @@ private:
     float _targetAngle = 0.f;
     static constexpr float _angularSpeed = pi;
 
-    static constexpr float _segmentRadius{25.f};
+    float _segmentRadius{25.f};
 
     static constexpr float _baseSpeed = 50.f;
 
@@ -58,7 +68,7 @@ private:
 
     float _energy = 0.f;
 
-    bool _wantsToReproduce = false;
+    bool _wantsToReproduce = true;
 };
 
 

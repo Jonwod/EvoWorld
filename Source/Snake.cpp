@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by jon on 12/05/19.
 //
@@ -16,6 +18,12 @@ Snake::Snake(const Vec2& initPosition)
     for(int i = 1 ; i < initSegments; ++i){
         addSegment();
     }
+}
+
+
+Snake::Snake(std::vector<Vec2> initSegments, float radius) {
+    _segmentRadius = radius;
+    _segments = std::move(initSegments);
 }
 
 
@@ -126,3 +134,12 @@ void Snake::grow() {
     _energy -= _getEnergyNeededToGrow();
     addSegment();
 }
+
+
+void Snake::removeSegments(int16_t numberOfSegments) {
+    for(int i = 0; i < numberOfSegments; ++i){
+        _segments.pop_back();
+    }
+}
+
+
