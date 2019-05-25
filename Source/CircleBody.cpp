@@ -2,8 +2,7 @@
 
 
 CircleBody::CircleBody(float radius, float mass, Vec2 initPosition)
-    :_radius(radius),
-    _position(initPosition),
+    :Circle(initPosition, radius),
     _mass(mass)
 {
     // ...
@@ -21,5 +20,5 @@ void CircleBody::setVelocity(const Vec2& velocity) {
 
 
 void CircleBody::update(float dt){
-    _position += _velocity * dt;
+    setPosition(getPosition() + _velocity * dt);
 }

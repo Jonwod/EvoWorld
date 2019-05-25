@@ -1,8 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include "Snake.h"
 #include "Math.h"
+#include "Snake.h"
+#include "Plant.h"
+#include "EvoWorld.h"
 
 #include <cfenv>
 
@@ -21,38 +23,24 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
     window.setFramerateLimit(60);
 
-    Snake snickers{Vec2(100.f, 100.f)};
-    snickers.setTargetAngle(pi/2);
+    EvoWorld world;
 
     constexpr float dt = 1.f / 60.f;
     while (window.isOpen())
     {
+        // ~~~~~~~~~~~Event Handling~~~~~~~~~~~
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-            snickers.setTargetAngle(-pi/2.f);
-        }
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-            snickers.setTargetAngle(0.f);
-        }
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-            snickers.setTargetAngle(pi / 2.f);
-        }
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-            snickers.setTargetAngle(pi);
-        }
-
-
+        // ~~~~Update/Draw~~~~~
+        world.update(dt);
         window.clear();
-
-        // ~~~~Draw~~~~~
-        snickers.update(dt);
-        snickers.draw(window);
+        world.draw(window);
         // ~~~~~~~~~~~~~
 
         window.display();

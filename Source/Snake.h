@@ -6,6 +6,8 @@
 #define EVOWORLD_SNAKE_H
 #include <vector>
 #include "Math.h"
+#include "Plant.h"
+#include "Circle.h"
 #include "SFML/Graphics.hpp"
 
 
@@ -22,12 +24,23 @@ public:
     bool addSegment();
 
     inline void setTargetAngle(float newAng){_targetAngle = newAng;}
+
+    bool doesHeadOverlap(const Circle & queryCircle) const;
+
+    void eat(Plant & plant);
+
+    bool isAlive() const { return !_segments.empty(); };
+
+    bool wantsToReproduce() const { return _wantsToReproduce;};
+
+    bool canReproduce() const { return _segments.size() > 3; };
 private:
-    void drawEyes(sf::RenderWindow & renderWindow) const;
-
-    float segmentSpacing() const;
-
-    void updateAngle(float dt);
+    void _drawEyes(sf::RenderWindow &renderWindow) const;
+    float _segmentSpacing() const;
+    void _updateAngle(float dt);
+    void _grantEnergy(float newEnergy);
+    float _getEnergyNeededToGrow() const;
+    void grow();
 
      // _segments[0] is the head
     std::vector<Vec2> _segments;
@@ -41,7 +54,11 @@ private:
 
     static constexpr float _baseSpeed = 50.f;
 
-    sf::Color _color{125, 125, 0};
+    sf::Color _color{125, 25, 50};
+
+    float _energy = 0.f;
+
+    bool _wantsToReproduce = false;
 };
 
 
