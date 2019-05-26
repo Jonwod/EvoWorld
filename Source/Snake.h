@@ -30,6 +30,8 @@ public:
 
     bool doesHeadOverlap(const Circle & queryCircle) const;
 
+    bool doesHeadOverlapOtherSnakeTail(const Snake & otherSnake) const;
+
     void eat(Plant & plant);
 
     bool isAlive() const { return !_segments.empty(); };
@@ -44,6 +46,8 @@ public:
 
     // Where 0 is the head and numSegments() - 1 is the last segment
     const Vec2& getSegment(std::size_t segmentIndex) const { return _segments[segmentIndex]; };
+
+    void die();
 private:
     void _drawEyes(sf::RenderWindow &renderWindow) const;
     float _segmentSpacing() const;

@@ -16,6 +16,7 @@ public:
     void update(float deltaSeconds);
     void draw(sf::RenderWindow & renderWindow) const;
 private:
+    void checkSnakeOnSnakeOverlaps();
     void reproduce(Snake & snake);
     std::vector<Snake> _snakes;
     std::vector<Plant> _plants;

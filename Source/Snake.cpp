@@ -143,3 +143,17 @@ void Snake::removeSegments(int16_t numberOfSegments) {
 }
 
 
+bool Snake::doesHeadOverlapOtherSnakeTail(const Snake &otherSnake) const{
+    for(int i = 1; i < otherSnake.numSegments(); ++i){
+        if(doesHeadOverlap(Circle(otherSnake.getSegment(i), otherSnake.getSegmentRadius()))){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void Snake::die() {
+    _segments.clear();
+    std::cout<<"He ded"<<std::endl;
+}
