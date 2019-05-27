@@ -17,7 +17,7 @@ public:
     void draw(sf::RenderWindow & renderWindow) const;
 private:
     void checkSnakeOnSnakeOverlaps();
-    void reproduce(Snake & snake);
+    void reproduce(int snakeIndex);
     std::vector<Snake> _snakes;
     std::vector<Plant> _plants;
 };

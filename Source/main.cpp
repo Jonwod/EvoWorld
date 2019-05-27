@@ -15,10 +15,17 @@
 //}
 
 
+//bool testAngleOf(float testAngle){
+//    Vec2 testVec = unitVector(testAngle);
+//    std::cout<<"unitVector("<<testAngle<<") = "<<str(testVec);
+//    std::cout<<" angleOf("<<str(testVec)<<") = "<<angleOf(testVec)<<std::endl;
+//    return testAngle == angleOf(testVec);
+//}
+
+
 int main()
 {
     feenableexcept(FE_INVALID | FE_OVERFLOW);
-
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
     window.setFramerateLimit(60);

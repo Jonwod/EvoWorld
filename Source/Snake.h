@@ -16,7 +16,7 @@ public:
     Snake(const Vec2& initPosition);
 
     // First element is head
-    Snake(std::vector<Vec2> initSegments, float radius);
+    Snake(std::vector<Vec2> initSegments, float radius, float initAngle = 0.f);
 
     void update(float dt);
 

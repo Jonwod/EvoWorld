@@ -9,7 +9,9 @@
 
 EvoWorld::EvoWorld() {
    _plants = std::vector<Plant>{Vec2{200.f, 200.f}, Vec2{300.f, 200.f}, Vec2{400.f, 300.f}};
-   _snakes.push_back(Vec2{100.f, 100.f});
+
+   _snakes.push_back(Vec2{500.f, 200.f});
+
 }
 
 
@@ -31,22 +33,22 @@ void EvoWorld::update(float deltaSeconds) {
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    for(Snake & snake: _snakes){
-        if(snake.isAlive()) {
-            snake.update(deltaSeconds);
+    for(int i = 0; i < _snakes.size(); ++i){
+        if(_snakes[i].isAlive()) {
+            _snakes[i].update(deltaSeconds);
 
             for (Plant &plant: _plants) {
-                if (plant.isAlive() && snake.doesHeadOverlap(plant.getCircle())) {
-                    snake.eat(plant);
+                if (plant.isAlive() && _snakes[i].doesHeadOverlap(plant.getCircle())) {
+                    _snakes[i].eat(plant);
                 }
 
             }
 
-            if(snake.wantsToReproduce()  &&  snake.canReproduce()){
-                reproduce(snake);
+            if(_snakes[i].wantsToReproduce()  &&  _snakes[i].canReproduce()){
+                reproduce(i);
             }
 
-            checkSnakeOnSnakeOverlaps();
+             checkSnakeOnSnakeOverlaps();
         }
     }
 }
@@ -64,22 +66,28 @@ void EvoWorld::draw(sf::RenderWindow &renderWindow) const {
 }
 
 
-void EvoWorld::reproduce(Snake & parentSnake) {
+void EvoWorld::reproduce(int parentSnakeIndex) {
+    if(parentSnakeIndex < 0  ||  parentSnakeIndex >= _snakes.size()){
+        std::cout<<"ERROR in "<<__func__<<": invalid snake index "<<parentSnakeIndex<<". _snakes.size() is "
+        <<_snakes.size()<<std::endl;
+    }
+
     constexpr int childSnakeSize = 2;
 
-    if(parentSnake.numSegments() <= childSnakeSize){
-        std::cout<<"Error in "<<__func__<<" parent snake of size "<<parentSnake.numSegments()<<
+    if(_snakes[parentSnakeIndex].numSegments() <= childSnakeSize){
+        std::cout<<"Error in "<<__func__<<" parent snake of size "<<_snakes[parentSnakeIndex].numSegments()<<
         " cannot spawn child""of size "<<childSnakeSize<<std::endl;
     }
 
     std::vector<Vec2> newSnakeSegs;
-    const int finalParentSegment = parentSnake.numSegments() - childSnakeSize;
-    for(int i = parentSnake.numSegments() - 1; i >= finalParentSegment;  --i){
-        newSnakeSegs.push_back(parentSnake.getSegment(i));
+    const int finalParentSegment = _snakes[parentSnakeIndex].numSegments() - childSnakeSize;
+    for(int i = _snakes[parentSnakeIndex].numSegments() - 1; i >= finalParentSegment;  --i){
+        newSnakeSegs.push_back(_snakes[parentSnakeIndex].getSegment(i));
     }
 
-    _snakes.emplace_back(Snake(newSnakeSegs, parentSnake.getSegmentRadius()));
-    parentSnake.removeSegments(childSnakeSize);
+    const float childSnakeAngle = angleOf(newSnakeSegs[0] - newSnakeSegs[1]);
+    _snakes.push_back(Snake(newSnakeSegs, _snakes[parentSnakeIndex].getSegmentRadius(), childSnakeAngle));
+    _snakes[parentSnakeIndex].removeSegments(childSnakeSize);
 }
 
 

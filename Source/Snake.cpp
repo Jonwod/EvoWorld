@@ -21,9 +21,12 @@ Snake::Snake(const Vec2& initPosition)
 }
 
 
-Snake::Snake(std::vector<Vec2> initSegments, float radius) {
-    _segmentRadius = radius;
-    _segments = std::move(initSegments);
+Snake::Snake(std::vector<Vec2> initSegments, float radius, float initAngle)
+    :_segmentRadius(radius),
+    _angle(initAngle),
+    _targetAngle(initAngle)
+{
+    _segments = initSegments;
 }
 
 
@@ -137,9 +140,18 @@ void Snake::grow() {
 
 
 void Snake::removeSegments(int16_t numberOfSegments) {
+    if (numberOfSegments > _segments.size()) {
+        std::cout<<"ERROR in "<<__func__<<": trying to remove "<<numberOfSegments<<" segments from snake with "<<
+        _segments.size()<<" segments"<<std::endl;
+        return;
+    }
+
+    std::cout<<"Removing segments. Start with: "<<_segments.size();
+
     for(int i = 0; i < numberOfSegments; ++i){
         _segments.pop_back();
     }
+    std::cout<<" End with: "<<_segments.size()<<std::endl;
 }
 
 
