@@ -14,6 +14,10 @@ typedef sf::Vector2f Vec2;
 
 Vec2 unitVector(float angleInRadians);
 
+inline float angleOf(const Vec2& vector){
+    return atan2(vector.y, vector.x);
+}
+
 Vec2 normal(const Vec2& vec);
 
 std::string str(const Vec2 & vec);
