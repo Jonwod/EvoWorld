@@ -116,3 +116,8 @@ void EvoWorld::checkSnakeOnSnakeOverlaps() {
         }
     }
 }
+
+
+Vec2 EvoWorld::getTestSnakePosition() const {
+    return _snakes.empty() ? Vec2(0, 0) : _snakes[0].getSegment(0);
+}

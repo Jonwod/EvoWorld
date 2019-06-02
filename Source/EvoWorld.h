@@ -15,6 +15,11 @@ public:
     EvoWorld();
     void update(float deltaSeconds);
     void draw(sf::RenderWindow & renderWindow) const;
+
+    // Testing
+    Vec2 getTestSnakePosition() const;
+    //
+
 private:
     void checkSnakeOnSnakeOverlaps();
     void reproduce(int snakeIndex);

@@ -5,6 +5,7 @@
 #include "Snake.h"
 #include "Plant.h"
 #include "EvoWorld.h"
+#include "Camera.h"
 
 #include <cfenv>
 
@@ -27,8 +28,15 @@ int main()
 {
     feenableexcept(FE_INVALID | FE_OVERFLOW);
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+    constexpr int window_x = 800;
+    constexpr int window_y = 600;
+
+    sf::RenderWindow window(sf::VideoMode(window_x, window_y), "SFML works!");
     window.setFramerateLimit(60);
+
+    sf::View view;
+    view.reset(sf::FloatRect(0, 0, window_x, window_y));
+    view.setViewport(sf::FloatRect(0,0 ,1.0f, 1.0f));
 
     EvoWorld world;
 
@@ -43,6 +51,8 @@ int main()
                 window.close();
         }
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        updateCamera(dt, view, window, world.getTestSnakePosition());
 
         // ~~~~Update/Draw~~~~~
         world.update(dt);
