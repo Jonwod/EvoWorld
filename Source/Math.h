@@ -43,5 +43,11 @@ inline bool nearlyEqual(float a, float b, float tolerance){
     return fabsf(a - b) < tolerance;
 }
 
+int randInt(int n1, int n2);
+
+float randFloatClamped();
+
+float randFloat(float n1, float n2);
+
 
 #endif //EVOWORLD_MATH_H

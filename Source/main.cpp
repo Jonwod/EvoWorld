@@ -4,7 +4,7 @@
 #include "Math.h"
 #include "Snake.h"
 #include "Plant.h"
-#include "EvoWorld.h"
+#include "World.h"
 #include "Camera.h"
 
 #include <cfenv>
@@ -38,8 +38,6 @@ int main()
     view.reset(sf::FloatRect(0, 0, window_x, window_y));
     view.setViewport(sf::FloatRect(0,0 ,1.0f, 1.0f));
 
-    EvoWorld world;
-
     constexpr float dt = 1.f / 60.f;
     while (window.isOpen())
     {
@@ -52,12 +50,12 @@ int main()
         }
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        updateCamera(dt, view, window, world.getTestSnakePosition());
+        updateCamera(dt, view, window, World::get().getTestSnakePosition());
 
         // ~~~~Update/Draw~~~~~
-        world.update(dt);
+        World::get().update(dt);
         window.clear();
-        world.draw(window);
+        World::get().draw(window);
         // ~~~~~~~~~~~~~
 
         window.display();

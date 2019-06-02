@@ -2,20 +2,18 @@
 // Created by jon on 25/05/19.
 //
 
-#include "EvoWorld.h"
+#include "World.h"
 #include "Circle.h"
 #include <iostream>
 
 
-EvoWorld::EvoWorld() {
-   _plants = std::vector<Plant>{Vec2{200.f, 200.f}, Vec2{300.f, 200.f}, Vec2{400.f, 300.f}};
-
+World::World() {
    _snakes.push_back(Vec2{500.f, 200.f});
 
 }
 
 
-void EvoWorld::update(float deltaSeconds) {
+void World::update(float deltaSeconds) {
     // ~~~~~~~~~~~Test controls~~~~~~~~~~~~~~
     Snake & snickers = _snakes[0];
 
@@ -35,6 +33,8 @@ void EvoWorld::update(float deltaSeconds) {
     snickers.setBoosting(sf::Keyboard::isKeyPressed(sf::Keyboard::Space));
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    updateSpontaneousPlantSpawning(deltaSeconds);
+
     for(int i = 0; i < _snakes.size(); ++i){
         if(_snakes[i].isAlive()) {
             _snakes[i].update(deltaSeconds);
@@ -53,10 +53,16 @@ void EvoWorld::update(float deltaSeconds) {
              checkSnakeOnSnakeOverlaps();
         }
     }
+
+    for(Plant & plant: _plants){
+        if(plant.isAlive()){
+            plant.update(deltaSeconds);
+        }
+    }
 }
 
 
-void EvoWorld::draw(sf::RenderWindow &renderWindow) const {
+void World::draw(sf::RenderWindow &renderWindow) const {
     for(const Snake & snake: _snakes){
         snake.draw(renderWindow);
     }
@@ -68,7 +74,7 @@ void EvoWorld::draw(sf::RenderWindow &renderWindow) const {
 }
 
 
-void EvoWorld::reproduce(int parentSnakeIndex) {
+void World::reproduce(int parentSnakeIndex) {
     if(parentSnakeIndex < 0  ||  parentSnakeIndex >= _snakes.size()){
         std::cout<<"ERROR in "<<__func__<<": invalid snake index "<<parentSnakeIndex<<". _snakes.size() is "
         <<_snakes.size()<<std::endl;
@@ -93,7 +99,7 @@ void EvoWorld::reproduce(int parentSnakeIndex) {
 }
 
 
-void EvoWorld::checkSnakeOnSnakeOverlaps() {
+void World::checkSnakeOnSnakeOverlaps() {
     for(int i = 0; i < _snakes.size(); ++i){
         for(int j = i + 1; j < _snakes.size(); ++j){
             if(_snakes[i].isAlive()  &&  _snakes[j].isAlive()) {
@@ -118,6 +124,32 @@ void EvoWorld::checkSnakeOnSnakeOverlaps() {
 }
 
 
-Vec2 EvoWorld::getTestSnakePosition() const {
+Vec2 World::getTestSnakePosition() const {
     return _snakes.empty() ? Vec2(0, 0) : _snakes[0].getSegment(0);
 }
+
+
+void World::updateSpontaneousPlantSpawning(float deltaSeconds){
+    if(_plants.size() < plantNumBelowWhichToSpontaneousSpawn  &&  timeSinceSpontaneousPlantSpawn >= 1.0f / plantSpontaneousSpawnRate){
+        spontaneouslySpawnPlant();
+        timeSinceSpontaneousPlantSpawn = 0.0f;
+    }
+    timeSinceSpontaneousPlantSpawn += deltaSeconds;
+}
+
+
+void World::spawnPlant(const Plant &plantTemplate) {
+    if(_plants.size() < maxPlants  &&  inhabitableZone.contains(plantTemplate.getPosition())){
+        _plants.push_back(plantTemplate);
+    }
+}
+
+
+void World::spontaneouslySpawnPlant() {
+    float randX = randFloat(inhabitableZone.left, inhabitableZone.left + inhabitableZone.width);
+    float randY = randFloat(inhabitableZone.top, inhabitableZone.top + inhabitableZone.height);
+    Plant plantTemplate{};
+    plantTemplate.setPosition({randX, randY});
+    spawnPlant(plantTemplate);
+}
+
