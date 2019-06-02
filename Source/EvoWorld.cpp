@@ -88,7 +88,7 @@ void EvoWorld::reproduce(int parentSnakeIndex) {
     }
 
     const float childSnakeAngle = angleOf(newSnakeSegs[0] - newSnakeSegs[1]);
-    _snakes.push_back(Snake(newSnakeSegs, _snakes[parentSnakeIndex].getSegmentRadius(), childSnakeAngle));
+    _snakes.emplace_back(newSnakeSegs, _snakes[parentSnakeIndex].getSegmentRadius(), childSnakeAngle);
     _snakes[parentSnakeIndex].removeSegments(childSnakeSize);
 }
 
