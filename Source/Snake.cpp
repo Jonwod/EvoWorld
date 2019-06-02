@@ -75,7 +75,7 @@ void Snake::update(float dt) {
     _updateAngle(dt);
 
     if(!_segments.empty()) {
-        _segments[0] += unitVector(_angle) * _baseSpeed * dt;
+        _segments[0] += unitVector(_angle) * getCurrentSpeed() * dt;
     }
 
     for(int i = 1; i < _segments.size(); ++i){
@@ -168,4 +168,14 @@ bool Snake::doesHeadOverlapOtherSnakeTail(const Snake &otherSnake) const{
 void Snake::die() {
     _segments.clear();
     std::cout<<"He ded"<<std::endl;
+}
+
+
+void Snake::setBoosting(bool shouldBoost) {
+    _isBoosting = shouldBoost;
+}
+
+
+float Snake::getCurrentSpeed() const {
+    return _isBoosting ? _boostSpeed : _baseSpeed;
 }

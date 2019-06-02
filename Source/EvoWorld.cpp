@@ -31,6 +31,8 @@ void EvoWorld::update(float deltaSeconds) {
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
         snickers.setTargetAngle(pi);
     }
+
+    snickers.setBoosting(sf::Keyboard::isKeyPressed(sf::Keyboard::Space));
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     for(int i = 0; i < _snakes.size(); ++i){
@@ -94,25 +96,22 @@ void EvoWorld::reproduce(int parentSnakeIndex) {
 void EvoWorld::checkSnakeOnSnakeOverlaps() {
     for(int i = 0; i < _snakes.size(); ++i){
         for(int j = i + 1; j < _snakes.size(); ++j){
-
-            if(_snakes[i].doesHeadOverlap(Circle(_snakes[j].getSegment(0), _snakes[i].getSegmentRadius()))){
-                // Heads overlap. Smallest snake dies
-                if(_snakes[i].numSegments() == _snakes[j].numSegments()){
+            if(_snakes[i].isAlive()  &&  _snakes[j].isAlive()) {
+                if (_snakes[i].doesHeadOverlap(Circle(_snakes[j].getSegment(0), _snakes[i].getSegmentRadius()))) {
+                    // Heads overlap. Smallest snake dies
+                    if (_snakes[i].numSegments() == _snakes[j].numSegments()) {
+                        _snakes[i].die();
+                        _snakes[j].die();
+                    } else if (_snakes[i].numSegments() > _snakes[j].numSegments()) {
+                        _snakes[j].die();
+                    } else {
+                        _snakes[i].die();
+                    }
+                } else if (_snakes[i].doesHeadOverlapOtherSnakeTail(_snakes[j])) {
                     _snakes[i].die();
+                } else if (_snakes[j].doesHeadOverlapOtherSnakeTail(_snakes[i])) {
                     _snakes[j].die();
                 }
-                else if(_snakes[i].numSegments() > _snakes[j].numSegments()){
-                    _snakes[j].die();
-                }
-                else{
-                    _snakes[i].die();
-                }
-            }
-            else if(_snakes[i].doesHeadOverlapOtherSnakeTail(_snakes[j])){
-                _snakes[i].die();
-            }
-            else if(_snakes[j].doesHeadOverlapOtherSnakeTail(_snakes[i])){
-                _snakes[j].die();
             }
         }
     }

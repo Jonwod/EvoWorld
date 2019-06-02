@@ -48,6 +48,11 @@ public:
     const Vec2& getSegment(std::size_t segmentIndex) const { return _segments[segmentIndex]; };
 
     void die();
+
+    void setBoosting(bool shouldBoost);
+
+    // Returns the current (scalar) speed
+    float getCurrentSpeed() const;
 private:
     void _drawEyes(sf::RenderWindow &renderWindow) const;
     float _segmentSpacing() const;
@@ -67,6 +72,10 @@ private:
     float _segmentRadius{25.f};
 
     static constexpr float _baseSpeed = 50.f;
+
+    static constexpr float _boostSpeed = 100.f;
+
+    bool _isBoosting = false;
 
     sf::Color _color{125, 25, 50};
 
