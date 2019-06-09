@@ -8,6 +8,7 @@
 #include "Math.h"
 #include "Plant.h"
 #include "Circle.h"
+#include "Meat.h"
 #include "SFML/Graphics.hpp"
 
 
@@ -33,6 +34,8 @@ public:
     bool doesHeadOverlapOtherSnakeTail(const Snake & otherSnake) const;
 
     void eat(Plant & plant);
+
+    void eat(Meat & meat);
 
     bool isAlive() const { return !_segments.empty(); };
 

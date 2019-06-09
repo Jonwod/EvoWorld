@@ -5,6 +5,7 @@
 //
 
 #include "Snake.h"
+#include "World.h"
 #include <vector>
 #include <iostream>
 
@@ -111,6 +112,11 @@ void Snake::eat(Plant &plant) {
 }
 
 
+void Snake::eat(Meat& meat) {
+    _grantEnergy(meat.consume());
+}
+
+
 void Snake::_grantEnergy(float newEnergy) {
     _energy += newEnergy;
     while(_energy > _getEnergyNeededToGrow()){
@@ -129,7 +135,7 @@ bool Snake::doesHeadOverlap(const Circle &queryCircle) const {
 
 
 float Snake::_getEnergyNeededToGrow() const{
-    return _segmentRadius;
+    return _segmentRadius * 2.1f;
 }
 
 
@@ -146,12 +152,9 @@ void Snake::removeSegments(int16_t numberOfSegments) {
         return;
     }
 
-    std::cout<<"Removing segments. Start with: "<<_segments.size();
-
     for(int i = 0; i < numberOfSegments; ++i){
         _segments.pop_back();
     }
-    std::cout<<" End with: "<<_segments.size()<<std::endl;
 }
 
 
@@ -166,6 +169,7 @@ bool Snake::doesHeadOverlapOtherSnakeTail(const Snake &otherSnake) const{
 
 
 void Snake::die() {
+    World::get().spawnMeat(_segments, _segmentRadius, _color);
     _segments.clear();
     std::cout<<"He ded"<<std::endl;
 }
@@ -179,3 +183,5 @@ void Snake::setBoosting(bool shouldBoost) {
 float Snake::getCurrentSpeed() const {
     return _isBoosting ? _boostSpeed : _baseSpeed;
 }
+
+

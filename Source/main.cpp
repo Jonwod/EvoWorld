@@ -9,20 +9,6 @@
 
 #include <cfenv>
 
-//bool testCircleBody(){
-//    CircleBody circle1{10.f, {0.f, 0.f}};
-//    CircleBody circle2{5.f, {-10.f, 13}};
-//    return !circle1.overlaps(circle2);
-//}
-
-
-//bool testAngleOf(float testAngle){
-//    Vec2 testVec = unitVector(testAngle);
-//    std::cout<<"unitVector("<<testAngle<<") = "<<str(testVec);
-//    std::cout<<" angleOf("<<str(testVec)<<") = "<<angleOf(testVec)<<std::endl;
-//    return testAngle == angleOf(testVec);
-//}
-
 
 int main()
 {

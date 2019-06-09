@@ -8,6 +8,8 @@
 #include <vector>
 #include "Plant.h"
 #include "Snake.h"
+#include "Meat.h"
+#include "Math.h"
 
 
 class World {
@@ -26,11 +28,15 @@ public:
     //
 
     void spawnPlant(const Plant & plantTemplate);
+
+    void spawnMeat(const std::vector<Vec2> & meatPositions, float meatRadius, sf::Color color);
 private:
     void checkSnakeOnSnakeOverlaps();
     void reproduce(int snakeIndex);
+    void clearDead();
     std::vector<Snake> _snakes;
     std::vector<Plant> _plants;
+    std::vector<Meat> _meat;
     sf::FloatRect inhabitableZone = sf::FloatRect{-5000, -5000, 10000, 10000};
     unsigned int maxPlants = 3000;
 

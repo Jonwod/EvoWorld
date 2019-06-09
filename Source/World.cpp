@@ -33,11 +33,17 @@ void World::update(float deltaSeconds) {
     snickers.setBoosting(sf::Keyboard::isKeyPressed(sf::Keyboard::Space));
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    clearDead();
+
     updateSpontaneousPlantSpawning(deltaSeconds);
 
     for(int i = 0; i < _snakes.size(); ++i){
         if(_snakes[i].isAlive()) {
             _snakes[i].update(deltaSeconds);
+
+            if(_snakes[i].wantsToReproduce()  &&  _snakes[i].canReproduce()){
+                reproduce(i);
+            }
 
             for (Plant &plant: _plants) {
                 if (plant.isAlive() && _snakes[i].doesHeadOverlap(plant.getCircle())) {
@@ -46,13 +52,14 @@ void World::update(float deltaSeconds) {
 
             }
 
-            if(_snakes[i].wantsToReproduce()  &&  _snakes[i].canReproduce()){
-                reproduce(i);
+            for(Meat& meat: _meat){
+                if(_snakes[i].doesHeadOverlap(Circle(meat.getPosition(), meat.getRadius())))
+                    _snakes[i].eat(meat);
             }
-
-             checkSnakeOnSnakeOverlaps();
         }
     }
+
+    checkSnakeOnSnakeOverlaps();
 
     for(Plant & plant: _plants){
         if(plant.isAlive()){
@@ -63,13 +70,18 @@ void World::update(float deltaSeconds) {
 
 
 void World::draw(sf::RenderWindow &renderWindow) const {
-    for(const Snake & snake: _snakes){
-        snake.draw(renderWindow);
-    }
-
     for(const Plant & plant: _plants){
         if(plant.isAlive())
             plant.draw(renderWindow);
+    }
+
+    for(const Meat& meat: _meat){
+        if(!meat.isDestroyed())
+         meat.draw(renderWindow);
+    }
+
+    for(const Snake & snake: _snakes){
+        snake.draw(renderWindow);
     }
 }
 
@@ -153,3 +165,27 @@ void World::spontaneouslySpawnPlant() {
     spawnPlant(plantTemplate);
 }
 
+
+void World::spawnMeat(const std::vector<Vec2> &meatPositions, float meatRadius, sf::Color color) {
+    for(const Vec2& pos: meatPositions) {
+        _meat.emplace_back(pos, meatRadius, color);
+    }
+}
+
+
+void World::clearDead() {
+    for(int i = _plants.size() - 1; i >= 0; --i){
+        if(!_plants[i].isAlive())
+            _plants.erase(_plants.begin() + i);
+    }
+
+    for(int i = _snakes.size() - 1; i >= 0; --i){
+        if(!_snakes[i].isAlive())
+            _snakes.erase(_snakes.begin() + i);
+    }
+
+    for(int i = _meat.size() - 1; i >= 0; --i){
+        if(_meat[i].isDestroyed())
+            _meat.erase(_meat.begin() + i);
+    }
+}
