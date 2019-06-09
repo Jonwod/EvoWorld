@@ -63,6 +63,7 @@ private:
     void _grantEnergy(float newEnergy);
     float _getEnergyNeededToGrow() const;
     void grow();
+    float _getBoostEnergyUseRate() const;
 
      // _segments[0] is the head
     std::vector<Vec2> _segments;

@@ -23,11 +23,12 @@ Snake::Snake(const Vec2& initPosition)
 
 
 Snake::Snake(std::vector<Vec2> initSegments, float radius, float initAngle)
-    :_segmentRadius(radius),
+    :_segments(std::move(initSegments)),
+    _segmentRadius(radius),
     _angle(initAngle),
     _targetAngle(initAngle)
 {
-    _segments = initSegments;
+    // ...
 }
 
 
@@ -83,6 +84,10 @@ void Snake::update(float dt) {
         const Vec2 offsetFromParent = _segments[i] - _segments[i - 1];
         const Vec2 targetOffset = normal(offsetFromParent) * _segmentSpacing();
         _segments[i] = _segments[i - 1] + targetOffset;
+    }
+
+    if(_isBoosting){
+        _energy -= _getBoostEnergyUseRate() * dt;
     }
 }
 
@@ -182,6 +187,11 @@ void Snake::setBoosting(bool shouldBoost) {
 
 float Snake::getCurrentSpeed() const {
     return _isBoosting ? _boostSpeed : _baseSpeed;
+}
+
+
+float Snake::_getBoostEnergyUseRate() const {
+    return _segmentRadius / 5.f;
 }
 
 

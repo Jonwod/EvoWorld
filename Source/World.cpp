@@ -15,22 +15,22 @@ World::World() {
 
 void World::update(float deltaSeconds) {
     // ~~~~~~~~~~~Test controls~~~~~~~~~~~~~~
-    Snake & snickers = _snakes[0];
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        snickers.setTargetAngle(-pi/2.f);
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        snickers.setTargetAngle(0.f);
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        snickers.setTargetAngle(pi / 2.f);
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        snickers.setTargetAngle(pi);
-    }
-
-    snickers.setBoosting(sf::Keyboard::isKeyPressed(sf::Keyboard::Space));
+//    Snake & snickers = _snakes[0];
+//
+//    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+//        snickers.setTargetAngle(-pi/2.f);
+//    }
+//    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+//        snickers.setTargetAngle(0.f);
+//    }
+//    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+//        snickers.setTargetAngle(pi / 2.f);
+//    }
+//    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+//        snickers.setTargetAngle(pi);
+//    }
+//
+//    snickers.setBoosting(sf::Keyboard::isKeyPressed(sf::Keyboard::Space));
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     clearDead();
