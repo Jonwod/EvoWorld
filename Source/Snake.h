@@ -9,13 +9,12 @@
 #include "Plant.h"
 #include "Circle.h"
 #include "Meat.h"
+#include "Brain.h"
 #include "SFML/Graphics.hpp"
 
 
 class Snake {
 public:
-    Snake(const Vec2& initPosition);
-
     // First element is head
     Snake(std::vector<Vec2> initSegments, float radius, float initAngle = 0.f);
 
@@ -86,6 +85,23 @@ private:
     float _energy = 0.f;
 
     bool _wantsToReproduce = true;
+
+
+    /* Brain inputs:
+        0: delta time
+     */
+    static constexpr size_t brainInputs = 1;
+
+    /* Brain outputs:
+        0: direction x
+        1: direction y
+        2: boost
+        3: reproduce
+    */
+    static constexpr size_t brainOutputs = 4;
+    Brain<brainInputs, brainOutputs> _brain;
+
+    void _processBrainOutput(const std::array<float, brainOutputs> brainOut);
 };
 
 

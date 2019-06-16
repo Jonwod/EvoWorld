@@ -8,8 +8,9 @@
 
 
 World::World() {
-   _snakes.push_back(Vec2{500.f, 200.f});
-
+   _snakes.emplace_back(std::vector<Vec2>{Vec2{200, 200}}, 25.f);
+   _snakes[0].addSegment();
+   _snakes[0].addSegment();
 }
 
 

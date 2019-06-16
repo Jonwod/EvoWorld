@@ -10,18 +10,6 @@
 #include <iostream>
 
 
-Snake::Snake(const Vec2& initPosition)
-{
-    // Create head
-    _segments.push_back(initPosition);
-
-    constexpr int initSegments{3};
-    for(int i = 1 ; i < initSegments; ++i){
-        addSegment();
-    }
-}
-
-
 Snake::Snake(std::vector<Vec2> initSegments, float radius, float initAngle)
     :_segments(std::move(initSegments)),
     _segmentRadius(radius),
@@ -74,6 +62,8 @@ void Snake::_drawEyes(sf::RenderWindow &renderWindow) const {
 
 
 void Snake::update(float dt) {
+    _processBrainOutput(_brain.compute({dt}));
+
     _updateAngle(dt);
 
     if(!_segments.empty()) {
@@ -192,6 +182,14 @@ float Snake::getCurrentSpeed() const {
 
 float Snake::_getBoostEnergyUseRate() const {
     return _segmentRadius / 5.f;
+}
+
+
+void Snake::_processBrainOutput(const std::array<float, 4> brainOut) {
+    const Vec2 dir = {brainOut[0], brainOut[1]};
+    setTargetAngle(angleOf(dir));
+    setBoosting(brainOut[2] > 0.5f);
+    _wantsToReproduce = brainOut[3] > 0.5f;
 }
 
 
