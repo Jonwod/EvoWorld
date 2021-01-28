@@ -14,7 +14,7 @@ World::World() {
 }
 
 
-void World::update(float deltaSeconds) {
+void World::update(float dt) {
     // ~~~~~~~~~~~Test controls~~~~~~~~~~~~~~
 //    Snake & snickers = _snakes[0];
 //
@@ -36,11 +36,12 @@ void World::update(float deltaSeconds) {
 
     clearDead();
 
-    updateSpontaneousPlantSpawning(deltaSeconds);
+    updateSpontaneousPlantSpawning(dt);
 
     for(int i = 0; i < _snakes.size(); ++i){
         if(_snakes[i].isAlive()) {
-            _snakes[i].update(deltaSeconds);
+            _snakes[i]._brain.think(dt, *this, _snakes[i]);
+            _snakes[i].update(dt);
 
             if(_snakes[i].wantsToReproduce()  &&  _snakes[i].canReproduce()){
                 reproduce(i);
@@ -64,7 +65,7 @@ void World::update(float deltaSeconds) {
 
     for(Plant & plant: _plants){
         if(plant.isAlive()){
-            plant.update(deltaSeconds);
+            plant.update(dt);
         }
     }
 }

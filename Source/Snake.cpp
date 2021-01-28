@@ -1,5 +1,3 @@
-#include <utility>
-
 //
 // Created by jon on 12/05/19.
 //
@@ -7,14 +5,14 @@
 #include "Snake.h"
 #include "World.h"
 #include <vector>
+#include <utility>
 #include <iostream>
 
 
 Snake::Snake(std::vector<Vec2> initSegments, float radius, float initAngle)
     :_segments(std::move(initSegments)),
     _segmentRadius(radius),
-    _angle(initAngle),
-    _targetAngle(initAngle)
+    _angle(initAngle)
 {
     // ...
 }
@@ -62,9 +60,7 @@ void Snake::_drawEyes(sf::RenderWindow &renderWindow) const {
 
 
 void Snake::update(float dt) {
-    _processBrainOutput(_brain.compute({dt}));
-
-    _updateAngle(dt);
+    _angle += _brain.getOutput().steer * _turnSpeed * dt;
 
     if(!_segments.empty()) {
         _segments[0] += unitVector(_angle) * getCurrentSpeed() * dt;
@@ -76,7 +72,7 @@ void Snake::update(float dt) {
         _segments[i] = _segments[i - 1] + targetOffset;
     }
 
-    if(_isBoosting){
+    if(isBoosting()){
         _energy -= _getBoostEnergyUseRate() * dt;
     }
 }
@@ -84,21 +80,6 @@ void Snake::update(float dt) {
 
 float Snake::_segmentSpacing() const {
     return getSegmentRadius() * 1.5f;
-}
-
-
-void Snake::_updateAngle(float dt) {
-    if(!nearlyEqual(_angle, _targetAngle, 0.0001f)){
-        const float targetOffset = normalizeAngle(_targetAngle - _angle);
-        const float deltaAngle = _angularSpeed * dt * (targetOffset / fabsf(targetOffset));
-
-        if(fabsf(deltaAngle) > fabsf(targetOffset)){
-            _angle = _targetAngle;
-        }
-        else{
-            _angle += deltaAngle;
-        }
-    }
 }
 
 
@@ -170,13 +151,8 @@ void Snake::die() {
 }
 
 
-void Snake::setBoosting(bool shouldBoost) {
-    _isBoosting = shouldBoost;
-}
-
-
 float Snake::getCurrentSpeed() const {
-    return _isBoosting ? _boostSpeed : _baseSpeed;
+    return isBoosting() ? _boostSpeed : _baseSpeed;
 }
 
 
@@ -185,11 +161,6 @@ float Snake::_getBoostEnergyUseRate() const {
 }
 
 
-void Snake::_processBrainOutput(const std::array<float, 4> brainOut) {
-    const Vec2 dir = {brainOut[0], brainOut[1]};
-    setTargetAngle(angleOf(dir));
-    setBoosting(brainOut[2] > 0.5f);
-    _wantsToReproduce = brainOut[3] > 0.5f;
+bool Snake::isBoosting() const {
+    return _brain.getOutput().boost  &&  _energy > 0.f;
 }
-
-

@@ -20,7 +20,7 @@ public:
         return instance;
     }
 
-    void update(float deltaSeconds);
+    void update(float dt);
     void draw(sf::RenderWindow & renderWindow) const;
 
     // Testing
